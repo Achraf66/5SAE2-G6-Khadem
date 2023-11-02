@@ -7,6 +7,7 @@ import javax.persistence.*;
 import lombok.*;
 
 @Entity
+@Builder
 public class Contrat implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -24,6 +25,9 @@ public class Contrat implements Serializable {
     @ManyToOne
    // @JsonIgnore
     private  Etudiant etudiant;
+
+    public Contrat(Specialite specialite, int i, Date date) {
+    }
 
     public Integer getIdContrat() {
         return idContrat;

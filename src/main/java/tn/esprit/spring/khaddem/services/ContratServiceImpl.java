@@ -60,29 +60,32 @@ public class ContratServiceImpl implements  IContratService{
     @Transactional
     public Contrat addAndAffectContratToEtudiant(Contrat ce, String nomE, String prenomE) {
         Long startDate = new Date().getTime();
-        log.info("startDate: "+startDate);
+        log.info("startDate: " + startDate);
         log.info("debut methode addAndAffectContratToEtudiant");
-        Etudiant etudiant=etudiantRepository.findByNomEAndPrenomE(nomE,prenomE);
-        log.info("etudiant: "+etudiant.getNomE()+" "+etudiant.getPrenomE());
+        Etudiant etudiant = etudiantRepository.findByNomEAndPrenomE(nomE, prenomE);
+        log.info("etudiant: " + etudiant.getNomE() + " " + etudiant.getPrenomE());
+
         // nb contrats actifs
-        Integer nbContratsActifs= etudiant.getContrats().size();
-        if(nbContratsActifs>5) {
+        Integer nbContratsActifs = etudiant.getContrats().size();
+        if (nbContratsActifs > 5) {
             log.info("nombre de contrats autorisés est atteint");
             Long endDate = new Date().getTime();
-            Long executionTime = endDate-startDate;
-            log.info("endDate: "+startDate);
-            log.info("executionTime: "+executionTime+ " ms");
+            Long executionTime = endDate - startDate;
+            log.info("endDate: " + endDate);
+            log.info("executionTime: " + executionTime + " ms");
             return ce;
         }
-        log.info("nb Contrats en cours: "+nbContratsActifs);
+
+        log.info("nb Contrats en cours: " + nbContratsActifs);
         contratRepository.save(ce);
         ce.setEtudiant(etudiant);
         log.info("fin methode addAndAffectContratToEtudiant");
-        Long endDate = new Date().getTime();
-        Long executionTime = endDate-startDate;
 
-        log.info("endDate: "+startDate);
-        log.info("executionTime: "+executionTime+ " ms");
+        Long endDate = new Date().getTime();
+        Long executionTime = endDate - startDate;
+
+        log.info("endDate: " + endDate);
+        log.info("executionTime: " + executionTime + " ms");
 
         return ce;
     }
