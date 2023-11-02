@@ -98,7 +98,6 @@ public class EtudiantServiceImpl implements IEtudiantService{
         log.info("taille apres ajout : "+equipesMisesAjour.size());
         etudiant.setEquipes(equipesMisesAjour);
 
-
         return e;
     }
 

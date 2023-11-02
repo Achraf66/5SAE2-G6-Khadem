@@ -3,26 +3,22 @@ package tn.esprit.spring.khaddem;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import tn.esprit.spring.khaddem.entities.Etudiant;
 import tn.esprit.spring.khaddem.entities.Option;
-import tn.esprit.spring.khaddem.repositories.EtudiantRepository;
 import tn.esprit.spring.khaddem.services.IEtudiantService;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 @SpringBootTest
-public class EtudiantServiceImplTest {
+ class EtudiantServiceImplTest {
 
 
     @Autowired
     IEtudiantService EtudiantService;
 
-    @Mock
-    EtudiantRepository etudiantRepository;
 
 
     @Test
