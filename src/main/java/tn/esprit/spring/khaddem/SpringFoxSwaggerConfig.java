@@ -1,4 +1,4 @@
-package com.esprit.examen;
+package tn.esprit.spring.khaddem;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -31,7 +31,7 @@ public class SpringFoxSwaggerConfig {
 				.securityContexts(Collections.singletonList(securityContext()))
 				.securitySchemes(Arrays.asList(apiKey()))
 				.select()
-				.apis(RequestHandlerSelectors.basePackage("com.esprit.examen.controller"))
+				.apis(RequestHandlerSelectors.basePackage("tn.esprit.spring.khaddem.controller"))
 				.paths(PathSelectors.any())
 				.build();
 	}
@@ -39,7 +39,7 @@ public class SpringFoxSwaggerConfig {
     private ApiInfo apiEndPointsInfo() {
         return new ApiInfoBuilder()
                 .title("My STOCK PROJECT")
-                .description("Micro-Service Documentation by Ahmed")
+                .description("Documentation")
                 .version("1.0.0")
                 .build();
     }
