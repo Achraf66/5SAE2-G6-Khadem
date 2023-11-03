@@ -107,5 +107,11 @@
         </plugins>
         <finalName>5SAE2-G6-Khaddem</finalName>
     </build>
-
+    <distributionManagement>
+        <repository>
+            <id>deploymentRepo</id>
+            <name>Nexus Repository</name>
+            <url>http://http://192.168.6.128:8081/repository/maven-releases</url>
+        </repository>
+    </distributionManagement>
 </project>
