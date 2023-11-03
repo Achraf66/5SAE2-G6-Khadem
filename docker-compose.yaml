@@ -5,8 +5,6 @@ services:
   mysqldb:
     image: mysql:5.7
     container_name: mysqldb
-    networks:
-      - mynetwork
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
 
