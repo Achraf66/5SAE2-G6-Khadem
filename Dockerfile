@@ -1,4 +1,4 @@
 FROM openjdk:8
 EXPOSE 8089
-ADD target/khaddem.jar khaddem.jar
-ENTRYPOINT ["java","-jar","/khaddem.jar"]
+ADD target/khaddem-4.0.jar khaddem-4.0.jar
+ENTRYPOINT ["java","-jar","/khaddem-4.0.jar"]
