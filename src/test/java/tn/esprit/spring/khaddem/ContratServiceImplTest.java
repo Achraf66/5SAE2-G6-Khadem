@@ -1,13 +1,16 @@
 package tn.esprit.spring.khaddem;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
 import tn.esprit.spring.khaddem.entities.Contrat;
 import tn.esprit.spring.khaddem.entities.Etudiant;
+import tn.esprit.spring.khaddem.entities.Option;
 import tn.esprit.spring.khaddem.entities.Specialite;
 import tn.esprit.spring.khaddem.repositories.ContratRepository;
 import tn.esprit.spring.khaddem.repositories.EtudiantRepository;
@@ -20,6 +23,8 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@Slf4j
+@SpringBootTest
 public class ContratServiceImplTest {
 
     @InjectMocks
@@ -54,6 +59,23 @@ public class ContratServiceImplTest {
     }
 
     @Test
+    void testAddContrat()
+    {
+        Contrat c = Contrat.builder().montantContrat(555).specialite(Specialite.IA).build();
+        log.info(c.toString());
+        Contrat c1 = contratService.addContrat(c);
+
+        assertNotNull(c1);
+        assertNotNull(c.getIdContrat());
+        assertTrue(c.getMontantContrat().equals(555));
+        assertTrue(c.getSpecialite().equals(Specialite.IA)
+        );
+
+
+        contratService.removeContrat(c.getIdContrat());
+    }
+
+    @Test
     public void testUpdateContrat() {
         Contrat mockContrat = Contrat.builder().build();
 
@@ -82,7 +104,7 @@ public class ContratServiceImplTest {
     }
 
     @Test
-    public void testAddContrat() {
+    public void testAddContrat1() {
         Contrat mockContrat = Contrat.builder().build();
 
         when(contratRepository.save(any(Contrat.class))).thenReturn(mockContrat);
