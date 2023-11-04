@@ -84,7 +84,6 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
-        <finalName>5SAE2-G6-Khaddem</finalName>
     </build>
     <distributionManagement>
         <repository>

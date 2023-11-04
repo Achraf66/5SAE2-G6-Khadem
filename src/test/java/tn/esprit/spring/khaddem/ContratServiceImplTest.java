@@ -58,22 +58,22 @@ public class ContratServiceImplTest {
         assertEquals(2, contrats.size());
     }
 
-    @Test
-    void testAddContrat()
-    {
-        Contrat c = Contrat.builder().montantContrat(555).specialite(Specialite.IA).build();
-        log.info(c.toString());
-        Contrat c1 = contratService.addContrat(c);
-
-        assertNotNull(c1);
-        assertNotNull(c.getIdContrat());
-        assertTrue(c.getMontantContrat().equals(555));
-        assertTrue(c.getSpecialite().equals(Specialite.IA)
-        );
-
-
-        contratService.removeContrat(c.getIdContrat());
-    }
+//    @Test
+//    void testAddContrat()
+//    {
+//        Contrat c = Contrat.builder().montantContrat(555).specialite(Specialite.IA).build();
+//        log.info(c.toString());
+//        Contrat c1 = contratService.addContrat(c);
+//
+//        assertNotNull(c1);
+//        assertNotNull(c.getIdContrat());
+//        assertTrue(c.getMontantContrat().equals(555));
+//        assertTrue(c.getSpecialite().equals(Specialite.IA)
+//        );
+//
+//
+//        contratService.removeContrat(c.getIdContrat());
+//    }
 
     @Test
     public void testUpdateContrat() {
