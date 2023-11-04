@@ -1,4 +1,9 @@
-FROM openjdk:8
+FROM openjdk:11-jre-slim
+
 EXPOSE 8089
-ADD target/5SAE2-G6-Khaddem.jar 5SAE2-G6-Khaddem.jar
-ENTRYPOINT ["java","-jar","/5SAE2-G6-Khaddem.jar"]
+
+ARG JAR_FILE=target/*.jar
+
+COPY ${JAR_FILE} app.jar
+
+ENTRYPOINT ["java", "-jar", "/app.jar"]
