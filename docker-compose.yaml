@@ -1,12 +1,12 @@
 version: '3.1'
-
 services:
-
   mysqldb:
     image: mysql:5.7
     container_name: mysqldb
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    volumes:
+      - db:/var/lib/mysql
 
   myphpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -18,12 +18,15 @@ services:
     environment:
       PMA_HOST: mysqldb
       PMA_ARBITRARY: 1
- 
+
+
   etudiant-container:
     image: etudiant
     container_name: etudiant-container
     ports:
       - 8089:8089
     build:
-      context: ./  
+      context: .
 
+volumes:
+  db:
