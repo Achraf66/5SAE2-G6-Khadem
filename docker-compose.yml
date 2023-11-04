@@ -18,3 +18,7 @@ services:
       - 8089:8089
     depends_on:
       - mysqldb
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysqldb:3306/khaddemApp
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
