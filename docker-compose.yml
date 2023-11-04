@@ -5,12 +5,12 @@ services:
     container_name: mysqldb
     image: mysql:8
     restart: unless-stopped
+    ports:
+      - 3306:3306
     environment:
       MYSQL_ROOT_PASSWORD: root
     volumes:
       - /home/vagrant/datadir:/var/lib/mysql
-    networks:
-      - 5sae2-g6-khadem_default
 
   spring_app:
     container_name: contrat
@@ -24,7 +24,3 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysqldb:3306/khaddemApp
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
-    networks:
-      - 5sae2-g6-khadem_default
-networks:
-  5sae2-g6-khadem_default:
