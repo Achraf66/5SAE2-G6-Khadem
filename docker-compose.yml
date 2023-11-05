@@ -17,6 +17,6 @@ services:
     depends_on:
       - mysqldb
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysqldb:3306/khaddemApp
+      - SPRING_DATASOURCE_URL=jdbc:mysql://192.168.128.2:3306/khaddemApp
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
