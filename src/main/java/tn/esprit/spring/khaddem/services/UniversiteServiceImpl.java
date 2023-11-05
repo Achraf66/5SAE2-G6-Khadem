@@ -7,15 +7,18 @@ import tn.esprit.spring.khaddem.entities.Departement;
 import tn.esprit.spring.khaddem.entities.Universite;
 import tn.esprit.spring.khaddem.repositories.DepartementRepository;
 import tn.esprit.spring.khaddem.repositories.UniversiteRepository;
+
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
 public class UniversiteServiceImpl implements  IUniversiteService{
-    @Autowired
+
     UniversiteRepository universiteRepository;
-    @Autowired
+
     DepartementRepository departementRepository;
     @Override
     public List<Universite> retrieveAllUniversites() {
@@ -25,6 +28,7 @@ public class UniversiteServiceImpl implements  IUniversiteService{
     @Override
     public Universite addUniversite(Universite u) {
         log.debug("u :"+u.getNomUniv());
+
         universiteRepository.save(u);
         return u;
     }
@@ -37,8 +41,17 @@ public class UniversiteServiceImpl implements  IUniversiteService{
 
     @Override
     public Universite retrieveUniversite(Integer idUniversite) {
-        return universiteRepository.findById(idUniversite).get();
+        Optional<Universite> universiteOptional = universiteRepository.findById(idUniversite);
+
+        if (universiteOptional.isPresent()) {
+            return universiteOptional.get();
+        } else {
+            // Handle the case where the entity is not found, e.g., return null or throw an exception
+            // For example, you can throw an EntityNotFoundException
+            throw new EntityNotFoundException("Universite with ID " + idUniversite + " not found");
+        }
     }
+
 
     @Transactional
     public void assignUniversiteToDepartement(Integer universiteId, Integer departementId) {

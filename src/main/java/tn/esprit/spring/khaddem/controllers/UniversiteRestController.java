@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import tn.esprit.spring.khaddem.dto.UniversiteAddDTO;
+import tn.esprit.spring.khaddem.dto.UniversiteDTO;
 import tn.esprit.spring.khaddem.entities.Universite;
 import tn.esprit.spring.khaddem.services.IUniversiteService;
 import java.util.List;
@@ -14,7 +16,7 @@ import java.util.List;
 @RequestMapping("/universite")
 
 public class UniversiteRestController {
-    @Autowired
+
     IUniversiteService universiteService;
 
     // http://localhost:8089/Kaddem/universite/retrieve-all-universites
@@ -22,9 +24,9 @@ public class UniversiteRestController {
     @Operation(description = "récupérer la liste des universités")
     @ResponseBody
     public List<Universite> getUniversites() {
-        List<Universite> listUniversites = universiteService.retrieveAllUniversites();
-        return listUniversites;
+        return universiteService.retrieveAllUniversites();
     }
+
 
     // http://localhost:8089/Kaddem/universite/retrieve-universite/8
     @GetMapping("/retrieve-universite/{universite-id}")
@@ -38,8 +40,11 @@ public class UniversiteRestController {
     @PostMapping("/add-universite")
     @Operation(description = "ajouter une université")
     @ResponseBody
-    public Universite addUniversite(@RequestBody Universite u) {
-        Universite universite = universiteService.addUniversite(u);
+    public Universite addUniversite(@RequestBody UniversiteAddDTO universiteAddDTO) {
+        Universite universite = new Universite();
+        universite.setNomUniv(universiteAddDTO.getnomUniv());
+
+        // Call the service to update the entit
         return universite;
     }
 
@@ -47,10 +52,16 @@ public class UniversiteRestController {
     @PutMapping("/update-universite")
     @Operation(description = "modifier une université")
     @ResponseBody
-    public Universite updateUniversite(@RequestBody Universite u) {
-        Universite universite= universiteService.updateUniversite(u);
-        return universite;
+    public Universite updateUniversite(@RequestBody UniversiteDTO universiteDTO) {
+        // Convert the DTO to your entity if necessary
+        Universite universite = new Universite();
+        universite.setNomUniv(universiteDTO.getnomUniv());
+
+        // Call the service to update the entity and return the result directly
+        return universiteService.updateUniversite(universite);
     }
+
+
 
     // http://localhost:8089/Kaddem/universite/assignUniversiteToDepartement/1/1
     @PutMapping("/assignUniversiteToDepartement/{universiteId}/{departementId}")
