@@ -1,9 +1,9 @@
 package tn.esprit.spring.khaddem.entities;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.*;
-import lombok.experimental.FieldDefaults;
+
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -30,4 +30,8 @@ public class Equipe  implements Serializable {
     private List<Etudiant> etudiants;
     @OneToOne(cascade = CascadeType.ALL)
     private DetailEquipe detailEquipe;
+
+    public Equipe(int i, String s) {
+    }
+
 }
