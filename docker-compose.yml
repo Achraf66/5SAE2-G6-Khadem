@@ -5,6 +5,7 @@ services:
     container_name: mysqldb
     image: mysql:8
     restart: unless-stopped
+    command: --bind-address=0.0.0.0
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
     volumes:
@@ -18,3 +19,7 @@ services:
       - 8089:8089
     depends_on:
       - mysqldb
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysqldb:3306/khaddemApp
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
