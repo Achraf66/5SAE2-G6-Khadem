@@ -9,13 +9,13 @@ import tn.esprit.spring.khaddem.repositories.DepartementRepository;
 import tn.esprit.spring.khaddem.repositories.UniversiteRepository;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
 public class UniversiteServiceImpl implements  IUniversiteService{
-    @Autowired
+
     UniversiteRepository universiteRepository;
-    @Autowired
     DepartementRepository departementRepository;
     @Override
     public List<Universite> retrieveAllUniversites() {
@@ -35,9 +35,17 @@ public class UniversiteServiceImpl implements  IUniversiteService{
         return u;
     }
 
+
     @Override
     public Universite retrieveUniversite(Integer idUniversite) {
-        return universiteRepository.findById(idUniversite).get();
+        Optional<Universite> optionalUniversite = universiteRepository.findById(idUniversite);
+
+        if (optionalUniversite.isPresent()) {
+            return optionalUniversite.get();
+        } else {
+            // Handle the case when no Universite is found for the given id, e.g., return null or throw an exception.
+            return null; // or throw an exception
+        }
     }
 
     @Transactional
