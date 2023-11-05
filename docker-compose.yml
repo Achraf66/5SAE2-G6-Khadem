@@ -6,7 +6,7 @@ services:
     image: mysql:8
     restart: unless-stopped
     environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_ROOT_PASSWORD: root
     volumes:
       - /home/vagrant/datadir:/var/lib/mysql
 
