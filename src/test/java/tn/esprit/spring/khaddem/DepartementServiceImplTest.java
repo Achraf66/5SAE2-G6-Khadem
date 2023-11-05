@@ -1,4 +1,4 @@
-package tn.esprit.spring.khaddem.test;
+package tn.esprit.spring.khaddem;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

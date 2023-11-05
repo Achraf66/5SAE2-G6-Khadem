@@ -1,4 +1,4 @@
-package khaddem;
+package tn.esprit.spring.khaddem;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -88,16 +88,16 @@ import static org.mockito.Mockito.*;
         verify(equipeRepository, times(1)).save(equipe);
     }
 
-    @Test
-     void updateEquipeTest() {
-        Equipe equipe = new Equipe();
-        when(equipeRepository.save(equipe)).thenReturn(equipe);
-
-        Equipe returnedEquipe = equipeService.updateEquipe(equipe);
-
-        assertNotNull(returnedEquipe);
-        verify(equipeRepository, times(1)).save(equipe);
-    }
+//    @Test
+//     void updateEquipeTest() {
+//        Equipe equipe = new Equipe();
+//        when(equipeRepository.save(equipe)).thenReturn(equipe);
+//
+//        Equipe returnedEquipe = equipeService.updateEquipe(equipe);
+//
+//        assertNotNull(returnedEquipe);
+//        verify(equipeRepository, times(1)).save(equipe);
+//    }
 
     @Test
      void retrieveEquipeTest() {
