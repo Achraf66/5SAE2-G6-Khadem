@@ -25,4 +25,5 @@ public class Departement implements Serializable {
     @JsonIgnore
     private List<Etudiant> etudiants;
 
+
 }
