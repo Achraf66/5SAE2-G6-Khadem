@@ -6,6 +6,7 @@ import javax.persistence.*;
 
 import lombok.*;
 
+@Builder
 @Entity
 public class Contrat implements Serializable {
 

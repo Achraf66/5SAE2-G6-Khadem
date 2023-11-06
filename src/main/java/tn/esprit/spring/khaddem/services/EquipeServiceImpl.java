@@ -2,8 +2,10 @@ package tn.esprit.spring.khaddem.services;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
 import tn.esprit.spring.khaddem.entities.Contrat;
 import tn.esprit.spring.khaddem.entities.Equipe;
 import tn.esprit.spring.khaddem.entities.Etudiant;
@@ -11,17 +13,18 @@ import tn.esprit.spring.khaddem.entities.Niveau;
 import tn.esprit.spring.khaddem.repositories.ContratRepository;
 import tn.esprit.spring.khaddem.repositories.EquipeRepository;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 @Slf4j
-public class EquipeServiceImpl implements IEquipeService{
+public class EquipeServiceImpl implements IEquipeService {
 
     EquipeRepository equipeRepository;
-
     ContratRepository contratRepository;
 
     @Override
@@ -31,79 +34,99 @@ public class EquipeServiceImpl implements IEquipeService{
 
     @Transactional
     public Equipe addEquipe(Equipe e) {
-
         equipeRepository.save(e);
         return e;
     }
 
-    @Override
-    public Equipe updateEquipe(Equipe e) {
-        equipeRepository.save(e);
-        return e;
+
+    public Equipe updateEquipe(Equipe updatedEquipe) {
+        Optional<Equipe> existingEquipeOptional = equipeRepository.findById(updatedEquipe.getIdEquipe());
+
+        if (existingEquipeOptional.isPresent()) {
+            Equipe existingEquipe = existingEquipeOptional.get();
+
+            // Merge changes from updatedEquipe into existingEquipe
+            BeanUtils.copyProperties(updatedEquipe, existingEquipe, "idEquipe"); // Exclude copying the "idEquipe" property
+
+            equipeRepository.save(existingEquipe);
+            return existingEquipe;
+        } else {
+            throw new EntityNotFoundException("Equipe not found");
+        }
     }
+
 
     @Override
     public Equipe retrieveEquipe(Integer idEquipe) {
-        return   equipeRepository.findById(idEquipe).get();
+        Optional<Equipe> equipeOptional = equipeRepository.findById(idEquipe);
+
+        if (equipeOptional.isPresent()) {
+            return equipeOptional.get();
+        } else {
+            throw new EntityNotFoundException("Equipe not found");
+        }
     }
 
-    public void evoluerEquipes(){
+
+    public void evoluerEquipes() {
         log.info("debut methode evoluerEquipes");
-        // t1 : recuperer date a linstant t1
-        List<Equipe> equipes = (List<Equipe>) equipeRepository.findAll();
-        log.debug("nombre equipes : "+equipes.size());
+
+        List<Equipe> equipes = equipeRepository.findAll();
+        log.debug("nombre equipes: " + equipes.size());
+
         for (Equipe equipe : equipes) {
-            if (equipe.getEtudiants()!=null && equipe.getEtudiants().size() > 0) {
-                log.debug("vérification niveau équipe");
-            if ((equipe.getNiveau().equals(Niveau.JUNIOR)) || (equipe.getNiveau().equals(Niveau.SENIOR))) {
-                List<Etudiant> etudiants = equipe.getEtudiants();
-
-                    Integer nbEtudiantsAvecContratsActifs = 0;
-                    for (Etudiant etudiant : etudiants) {
-                     log.debug("in for etudiants");
-                      //  List<Contrat> contrats = etudiant.getContrats();
-                        List<Contrat> contrats = contratRepository.findByEtudiantIdEtudiant(etudiant.getIdEtudiant())  ;
-                        for (Contrat contrat : contrats) {
-                            log.debug("in contrat");
-
-                            Date dateSysteme = new Date();
-                            long difference_In_Time = contrat.getDateFinContrat().getTime() -contrat.getDateDebutContrat().getTime() ;
-                            long difference_In_Years = (difference_In_Time / (1000l * 60 * 60 * 24 * 365));
-                            log.debug("difference_In_Years: "+difference_In_Years);
-                            if ((contrat.getArchived() == null || contrat.getArchived() == false) && (difference_In_Years > 1)) {
-                                //	contratsActifs.add(contrat);
-                                nbEtudiantsAvecContratsActifs++;
-                                break;
-                            }
-                            if (nbEtudiantsAvecContratsActifs >= 3) break;
-                        }
-// t2 : recuperer date a linstant t2 : te=t2-t1
-                    }
-                    log.info("nbEtudiantsAvecContratsActifs: " + nbEtudiantsAvecContratsActifs);
-                    if (nbEtudiantsAvecContratsActifs >= 3) {
-                        if (equipe.getNiveau().equals(Niveau.JUNIOR)) {
-                            log.info("mise a jour du niveau de l equipe " + equipe.getNomEquipe() +
-                                    " du niveau " + equipe.getNiveau() + " vers le niveau supérieur SENIOR");
-                            equipe.setNiveau(Niveau.SENIOR);
-                            equipeRepository.save(equipe);
-                            // t2 : recuperer date a linstant t2 : te=t2-t1
-                            break;
-                        }
-                        if (equipe.getNiveau().equals(Niveau.SENIOR)) {
-                            log.info("mise a jour du niveau de l equipe " + equipe.getNomEquipe() +
-                                    " du niveau " + equipe.getNiveau() + " vers le niveau supérieur EXPERT");
-                            equipe.setNiveau(Niveau.EXPERT);
-                            equipeRepository.save(equipe);
-                            // t2 : recuperer date a linstant t2 : te=t2-t1
-                            break;
-                        }
-                    }
-                }
-
+            if (equipeHasActiveStudentsAndEligibleForUpgrade(equipe)) {
+                upgradeEquipeNiveau(equipe);
             }
         }
+
         log.info("fin methode evoluerEquipes");
-        // t2 : recuperer date a linstant t2 : te=t2-t1
+    }
+
+    private boolean equipeHasActiveStudentsAndEligibleForUpgrade(Equipe equipe) {
+        return equipe.getEtudiants() != null && !equipe.getEtudiants().isEmpty()
+                && (equipe.getNiveau().equals(Niveau.JUNIOR) || equipe.getNiveau().equals(Niveau.SENIOR))
+                && shouldUpgradeEquipe(equipe);
+    }
+
+    private boolean shouldUpgradeEquipe(Equipe equipe) {
+        List<Etudiant> etudiants = equipe.getEtudiants();
+        int countActiveContracts = 0;
+
+        for (Etudiant etudiant : etudiants) {
+            List<Contrat> contrats = contratRepository.findByEtudiantIdEtudiant(etudiant.getIdEtudiant());
+
+            for (Contrat contrat : contrats) {
+                if (isContractActive(contrat)) {
+                    countActiveContracts++;
+                    if (countActiveContracts >= 3) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private boolean isContractActive(Contrat contrat) {
+        if (contrat.getArchived() == null || !contrat.getArchived()) {
+            long timeDifferenceInMillis = contrat.getDateFinContrat().getTime() - contrat.getDateDebutContrat().getTime();
+            long yearsDifference = timeDifferenceInMillis / (1000L * 60 * 60 * 24 * 365);
+            return yearsDifference > 1;
+        }
+        return false;
+    }
+
+    private void upgradeEquipeNiveau(Equipe equipe) {
+        Niveau currentNiveau = equipe.getNiveau();
+        Niveau newNiveau = (currentNiveau == Niveau.JUNIOR) ? Niveau.SENIOR : Niveau.EXPERT;
+
+        log.info("mise a jour du niveau de l'équipe " + equipe.getNomEquipe() +
+                " du niveau " + currentNiveau + " vers le niveau supérieur " + newNiveau);
+
+        equipe.setNiveau(newNiveau);
+        equipeRepository.save(equipe);
     }
 
 }
