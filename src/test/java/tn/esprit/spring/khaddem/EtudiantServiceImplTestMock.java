@@ -23,7 +23,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest
-public class etudiantServiceImplTestMock {
+public class EtudiantServiceImplTestMock {
 
 
     @Mock
