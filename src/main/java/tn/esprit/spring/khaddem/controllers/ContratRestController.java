@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@CrossOrigin("http://192.168.33.10:4200")
+@CrossOrigin("http://172.22.0.3:4200")
 @RequestMapping("/contrat")
 public class ContratRestController {
     IContratService contratService;
